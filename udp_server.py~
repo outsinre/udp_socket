@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""UDP Server
+
+1. Receive client's lower-case message.
+2. Transfrom the message to upper-case and send back.
+
+"""
+
+__author__ = "HU Zachary"
+__email__ = "zhucac@outlook.com"
+__credits__ = ["Google","Python3.8 Manual"]
+__copyright__ = "Copyright 2020, China"
+__license__ = "GPL"
+__version__ = "0.1"
+__status__ = "Development"
+
+import sys
+import socket
+
+def main():
+    """Main entrance of this module."""
+
+    # '' means to listen on all interfaces
+    server_name, server_port = '', 12345
+
+    server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+    server_socket.bind((server_name, server_port))
+    # Sockets are by default always created in "blocking mode" unless set a timeout
+    server_socket.settimeout(5*60)
+
+    print("UDP server is ready to receive datagrams.")
+
+    while True:
+        try:
+            # UDP uses recvfrom() instead of recv() as the socket may receive datagram from multiple remote sockets
+            client_message, client_address = server_socket.recvfrom(2048)
+        except socket.timeout as tmt:
+            print("Server socket recvfrom() exception:", tmt)
+            continue
+        except socket.error as err:
+            print("Server socket recvfrom() exception:", err)
+            continue
+        else:
+            print("Client message received.")
+
+        client_message_str = client_message.decode()
+        print("Client message:", client_message_str)
+
+        client_message_upper = client_message_str.upper().encode()
+        try:
+            server_socket.sendto(client_message_upper, client_address)
+        except socket.timeout as tmt:
+            print("Server socket sendto() exception:", tmt)
+            continue
+        except socket.error as err:
+            print("Server socket sendto() exception:", err)
+            continue
+        else:
+            print("Client message received.")
+
+if __name__ == "__main__":
+    sys.exit(main())
