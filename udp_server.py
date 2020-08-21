@@ -20,45 +20,49 @@ import sys
 import socket
 
 def main():
-    """Main entrance of this module."""
+    """Main entrance of the UDP server module."""
 
     # '' means to listen on all interfaces
     server_host, server_port = '', 12345
 
     server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     server_socket.bind((server_host, server_port))
+
     # Sockets are by default always created in "blocking mode" unless set a timeout
     server_socket.settimeout(5*60)
-
-    print("UDP server is ready to receive datagrams.")
+    print("The server is ready to receive datagrams.")
 
     while True:
         try:
             # UDP uses recvfrom() instead of recv() as the socket may receive datagram from multiple remote sockets
-            client_message, client_address = server_socket.recvfrom(2048)
+            client_data, client_address = server_socket.recvfrom(2048)
         except socket.timeout as tmt:
             print("Server socket recvfrom() exception:", tmt)
+            print("Continue ...")
             continue
         except socket.error as err:
             print("Server socket recvfrom() exception:", err)
+            print("Continue ...")
             continue
         else:
-            print("Client message received.")
+            print("Client socket:", client_address)
 
-        client_message_str = client_message.decode()
-        print("Client message:", client_message_str)
+        client_message = client_data.decode()
+        print("Message received:", client_message)
 
-        client_message_upper = client_message_str.upper().encode()
+        upper_message = client_message.upper()
         try:
-            server_socket.sendto(client_message_upper, client_address)
+            server_socket.sendto(upper_message.encode(), client_address)
         except socket.timeout as tmt:
             print("Server socket sendto() exception:", tmt)
+            print("Continue ...")
             continue
         except socket.error as err:
             print("Server socket sendto() exception:", err)
+            print("Continue ...")
             continue
         else:
-            print("Client message received.")
+            print("Message sent: {}\nContinue ...".format(upper_message))
 
 if __name__ == "__main__":
     sys.exit(main())

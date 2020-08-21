@@ -20,7 +20,8 @@ import sys
 import socket
 
 def main():
-    """Main entrance of this module."""
+    """Main entrance of the UDP client module."""
+
     server_host, server_port = "192.168.56.105", 12345
 
     client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -40,12 +41,12 @@ def main():
         client_socket.close()
         return 1
     else:
-        print("Client message sent out.")
+        print("Message sent:", user_input)
 
     try:
         # UDP uses recvfrom() instead of recv() as the socket may receive datagram from multiple remote sockets
         # recvfrom() does not need server socket address
-        server_message, _ = client_socket.recvfrom(2048)
+        server_data, server_address = client_socket.recvfrom(2048)
     except socket.timeout as tmt:
         print("Socket recvfrom() exception:", tmt)
         return 1
@@ -53,8 +54,7 @@ def main():
         print("Socket recvfrom() exception:", err)
         return 1
     else:
-        print("Server message received.")
-        print("Server message:", server_message.decode())
+        print("Server socket: {}\nMessage received: {}".format(server_address, server_data.decode()))
     finally:
         print("Closing client socket ...")
         client_socket.close()
