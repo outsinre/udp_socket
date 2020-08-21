@@ -21,7 +21,7 @@ import socket
 
 def main():
     """Main entrance of this module."""
-    server_name, server_port = "192.168.56.105", 12345
+    server_host, server_port = "192.168.56.105", 12345
 
     client_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     # Sockets are by default always created in "blocking mode" unless set a timeout
@@ -30,7 +30,7 @@ def main():
     user_input = input('Input lower-case sentence: ')
 
     try:
-        client_socket.sendto(user_input.encode(), (server_name, server_port))
+        client_socket.sendto(user_input.encode(), (server_host, server_port))
     except socket.timeout as tmt:
         print("Socket sendto() exception:", tmt)
         client_socket.close()
@@ -44,6 +44,7 @@ def main():
 
     try:
         # UDP uses recvfrom() instead of recv() as the socket may receive datagram from multiple remote sockets
+        # recvfrom() does not need server socket address
         server_message, _ = client_socket.recvfrom(2048)
     except socket.timeout as tmt:
         print("Socket recvfrom() exception:", tmt)

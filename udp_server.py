@@ -23,10 +23,10 @@ def main():
     """Main entrance of this module."""
 
     # '' means to listen on all interfaces
-    server_name, server_port = '', 12345
+    server_host, server_port = '', 12345
 
     server_socket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
-    server_socket.bind((server_name, server_port))
+    server_socket.bind((server_host, server_port))
     # Sockets are by default always created in "blocking mode" unless set a timeout
     server_socket.settimeout(5*60)
 
