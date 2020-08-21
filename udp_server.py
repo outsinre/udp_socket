@@ -45,7 +45,7 @@ def main():
             print("Continue ...")
             continue
         else:
-            print("Client socket:", client_address)
+            print("From client socket:", client_address)
 
         client_message = client_data.decode()
         print("Message received:", client_message)

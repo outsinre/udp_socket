@@ -41,7 +41,7 @@ def main():
         client_socket.close()
         return 1
     else:
-        print("Message sent:", user_input)
+        print("To server socket: {}.\nMessage sent: {}".format((server_host, server_port), user_input))
 
     try:
         # UDP uses recvfrom() instead of recv() as the socket may receive datagram from multiple remote sockets
@@ -54,7 +54,7 @@ def main():
         print("Socket recvfrom() exception:", err)
         return 1
     else:
-        print("Server socket: {}\nMessage received: {}".format(server_address, server_data.decode()))
+        print("From server socket: {}\nMessage received: {}".format(server_address, server_data.decode()))
     finally:
         print("Closing client socket ...")
         client_socket.close()
